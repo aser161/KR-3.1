@@ -17,12 +17,8 @@ public class SocksController {
         this.socksService = socksService;
     }
 
-    @GetMapping
-    public String i(){
-        return "u";
-    }
 
-    @PostMapping("/add")
+    @PostMapping()
     public ResponseEntity<Integer> addSocks(@RequestParam Color color,
                                             @RequestParam SizeSocks sizeSocks,
                                             @RequestParam Integer cottonPart,
@@ -32,7 +28,7 @@ public class SocksController {
         return ResponseEntity.ok().body(socksService.getAmountOfSocks(socks));
     }
 
-    @PutMapping("/issue")
+    @PutMapping()
     public ResponseEntity<Integer> issueSocks(@RequestParam Color color,
                                               @RequestParam SizeSocks sizeSocks,
                                               @RequestParam Integer cottonPart,
@@ -44,23 +40,17 @@ public class SocksController {
         return ResponseEntity.internalServerError().build();
     }
 
-    @GetMapping("/get")
+    @GetMapping()
     public ResponseEntity<Integer> getAmountSocks(@RequestParam Color color,
                                                   @RequestParam SizeSocks sizeSocks,
                                                   @RequestParam Integer cottonMin,
                                                   @RequestParam Integer cottonMax
     ) {
-        int total = 0;
-        for (int i = cottonMin; i <= cottonMax; i++){
-            Socks socks = new Socks(color, sizeSocks, i);
-            if (socksService.getAmountOfSocks(socks) != 0 ) {
-                total+=socksService.getAmountOfSocks(socks);
-            }
-        }
-        return ResponseEntity.ok().body(total);
+        int amount = socksService.getAmountOfSocksWithCottonPart(color, sizeSocks, cottonMin, cottonMax);
+        return ResponseEntity.ok().body(amount);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping()
     public ResponseEntity<Integer> deleteSocks(@RequestParam Color color,
                                                @RequestParam SizeSocks sizeSocks,
                                                @RequestParam Integer cottonPart,
